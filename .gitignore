@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+client/.env
+server/.env
+client/.env.*
+server/.env.*
+!client/.env.example
+!server/.env.example
+
+# Firebase credentials
+serviceAccountKey.json
+firebase-adminsdk*.json
+google-services.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Logs
+*.log
+
+# Generated files
+uploads/
+outputs/
+temp/
+
+# AI models
+*.pt
+*.pth
+*.h5
+*.keras
+*.onnx

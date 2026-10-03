@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Prefer all client writes via Express + Admin SDK.
+    // If enabling direct client access later, tighten these rules.
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

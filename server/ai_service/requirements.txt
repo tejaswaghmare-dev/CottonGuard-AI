@@ -1,0 +1,9 @@
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30,<1
+python-multipart>=0.0.9
+numpy>=1.24,<3
+Pillow>=10
+ultralytics>=8.2
+tensorflow>=2.16,<2.21
+opencv-python-headless>=4.8
+h5py>=3.10
