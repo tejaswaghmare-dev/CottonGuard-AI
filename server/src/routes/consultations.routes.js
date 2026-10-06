@@ -8,6 +8,19 @@ const router = express.Router();
 router.post('/', authenticate, requireRole(ROLES.FARMER), ctrl.book);
 router.get('/', authenticate, ctrl.list);
 router.get('/quota', authenticate, requireRole(ROLES.FARMER), ctrl.myQuota);
+router.get(
+  '/:consultationId/report',
+  authenticate,
+  requireRole(ROLES.LEAF_DOCTOR),
+  ctrl.doctorReport
+);
+
+router.get(
+  '/:consultationId/report/pdf',
+  authenticate,
+  requireRole(ROLES.LEAF_DOCTOR),
+  ctrl.downloadDoctorReport
+);
 router.get('/:consultationId', authenticate, ctrl.getOne);
 router.put('/:consultationId', authenticate, ctrl.update);
 

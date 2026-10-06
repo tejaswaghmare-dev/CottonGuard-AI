@@ -38,3 +38,6 @@ temp/
 *.h5
 *.keras
 *.onnx
+
+# Google OAuth credentials
+google-oauth-token.json

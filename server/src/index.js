@@ -17,6 +17,7 @@ const consultationsRoutes = require('./routes/consultations.routes');
 const doctorsRoutes = require('./routes/doctors.routes');
 const chatRoutes = require('./routes/chat.routes');
 const paymentRoutes = require('./routes/payment.routes');
+const googleRoutes = require('./routes/google.routes');
 const predCtrl = require('./controllers/prediction.controller');
 const { authenticate } = require('./middleware/auth');
 const { requireRole, ROLES } = require('./middleware/roles');
@@ -56,6 +57,7 @@ app.use('/api/consultations', consultationsRoutes);
 app.use('/api/doctors', doctorsRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/google', googleRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

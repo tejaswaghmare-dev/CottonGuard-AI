@@ -28,6 +28,14 @@ const env = {
     keyId: get('RAZORPAY_KEY_ID'),
     keySecret: get('RAZORPAY_KEY_SECRET'),
   },
+  google: {
+    clientId: get('GOOGLE_CLIENT_ID'),
+    clientSecret: get('GOOGLE_CLIENT_SECRET'),
+    redirectUri: get(
+      'GOOGLE_REDIRECT_URI',
+      'http://localhost:5000/api/google/oauth2callback'
+    ),
+  },
 };
 
 module.exports = { env, required };

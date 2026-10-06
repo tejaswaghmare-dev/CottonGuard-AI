@@ -101,6 +101,44 @@ async function myQuota(req, res, next) {
   }
 }
 
+async function doctorReport(req, res, next) {
+  try {
+    const doctorReportService = require('../services/doctorReport.service');
+
+    const report =
+      await doctorReportService.generateDoctorReport(
+        req.params.consultationId,
+        req.user.uid
+      );
+
+    res.json({
+      success: true,
+      report,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function downloadDoctorReport(req, res, next) {
+  try {
+    const doctorReportService = require('../services/doctorReport.service');
+
+    const report =
+      await doctorReportService.generateDoctorReport(
+        req.params.consultationId,
+        req.user.uid
+      );
+
+    doctorReportService.createDoctorReportPDF(
+      report,
+      res
+    );
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   listDoctors,
   getDoctor,
@@ -112,4 +150,6 @@ module.exports = {
   update,
   farmerHistory,
   myQuota,
+  doctorReport,
+  downloadDoctorReport,
 };

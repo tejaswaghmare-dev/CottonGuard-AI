@@ -74,6 +74,11 @@ export const consultationsApi = {
   get: (id) => api.get(`/consultations/${id}`).then((r) => r.data),
   update: (id, payload) => api.put(`/consultations/${id}`, payload).then((r) => r.data),
   quota: () => api.get('/consultations/quota').then((r) => r.data),
+
+  downloadDoctorReport: (id) =>
+  api.get(`/consultations/${id}/report/pdf`, {
+    responseType: 'blob',
+  }),
 };
 
 export const chatApi = {

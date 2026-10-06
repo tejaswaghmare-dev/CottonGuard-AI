@@ -1,3 +1,5 @@
+
+const googleMeetService = require('./googleMeet.service');
 const { v4: uuidv4 } = require('uuid');
 const { getDb } = require('../config/firebase');
 const { env } = require('../config/env');
@@ -5,11 +7,7 @@ const { getQuota, consumeFreeSlot } = require('./quota.service');
 const { createPaymentOrder } = require('./payment.service');
 const { assertFarmOwner } = require('./farm.service');
 
-function generateMeetLink(consultationId) {
-  // Integration point: replace with Google Calendar/Meet API when credentials available
-  const code = consultationId.replace(/-/g, '').slice(0, 10);
-  return `${env.mockMeetBaseUrl}/${code}`;
-}
+
 
 async function listDoctors() {
   const db = getDb();
@@ -116,7 +114,7 @@ async function bookConsultation(farmerId, payload) {
     });
   }
 
-  const meetingLink = generateMeetLink(consultationId);
+  
 
   const consultation = {
     consultationId,
@@ -126,7 +124,10 @@ async function bookConsultation(farmerId, payload) {
     date,
     time,
     status,
-    meetingLink,
+    meetingLink: null,
+    meetingName: null,
+    meetingCode: null,
+    meetingCreatedAt: null,
     consultationType: consultationType || 'video',
     fee: isFree ? 0 : fee,
     isFree,
@@ -193,35 +194,115 @@ async function getConsultation(consultationId, user) {
 async function updateConsultation(consultationId, user, data) {
   const c = await getConsultation(consultationId, user);
   const db = getDb();
-  const updates = { updatedAt: new Date().toISOString() };
+  const updates = {
+    updatedAt: new Date().toISOString(),
+  };
 
   if (user.role === 'leaf_doctor') {
-    if (data.status && ['accepted', 'rejected', 'completed'].includes(data.status)) {
-      updates.status = data.status;
-      if (data.status === 'accepted' && c.status === 'confirmed') {
-        updates.status = 'accepted';
+    if (data.status) {
+      const allowedStatuses = ['accepted', 'rejected', 'completed'];
+
+      if (!allowedStatuses.includes(data.status)) {
+        throw Object.assign(
+          new Error('Invalid consultation status'),
+          { status: 400 }
+        );
       }
-      if (data.status === 'accepted' && c.isFree) {
+
+      /*
+       * DOCTOR ACCEPTS CONSULTATION
+       *
+       * Only confirmed/paid consultations can be accepted.
+       * Free consultations are already confirmed.
+       */
+      if (data.status === 'accepted') {
+        const canAccept =
+          c.status === 'confirmed' ||
+          (c.status === 'awaiting_payment' && c.paymentStatus === 'paid') ||
+          c.status === 'accepted';
+
+        if (!canAccept) {
+          throw Object.assign(
+            new Error(
+              'Consultation cannot be accepted until it is confirmed or payment is completed.'
+            ),
+            { status: 400 }
+          );
+        }
+
         updates.status = 'accepted';
+
+        /*
+         * Create REAL Google Meet only if one does not already exist.
+         */
+        if (!c.meetingLink) {
+          try {
+            const meeting = await googleMeetService.createMeetSpace();
+
+            updates.meetingLink = meeting.meetingUri;
+            updates.meetingName = meeting.name;
+            updates.meetingCode = meeting.meetingCode;
+            updates.meetingCreatedAt = new Date().toISOString();
+
+            console.log(
+              `Google Meet created for consultation ${consultationId}: ${meeting.meetingUri}`
+            );
+          } catch (error) {
+            console.error(
+              'Google Meet creation failed:',
+              error.message
+            );
+
+            throw Object.assign(
+              new Error(
+                `Doctor accepted request, but Google Meet creation failed: ${error.message}`
+              ),
+              { status: 500 }
+            );
+          }
+        }
       }
-      if (data.status === 'accepted' && c.paymentStatus === 'paid') {
-        updates.status = 'accepted';
+
+      if (data.status === 'rejected') {
+        updates.status = 'rejected';
       }
-      // Allow accept when confirmed or paid
-      if (data.status === 'accepted' && !['confirmed', 'awaiting_payment', 'accepted'].includes(c.status) && c.paymentStatus !== 'paid' && !c.isFree) {
-        // still allow doctor to accept pending free ones
+
+      if (data.status === 'completed') {
+        updates.status = 'completed';
       }
     }
-    if (data.doctorNotes !== undefined) updates.doctorNotes = data.doctorNotes;
-    if (data.notes !== undefined) updates.doctorNotes = data.notes;
+
+    if (data.doctorNotes !== undefined) {
+      updates.doctorNotes = data.doctorNotes;
+    }
+
+    if (data.notes !== undefined) {
+      updates.doctorNotes = data.notes;
+    }
   }
 
   if (user.role === 'farmer') {
-    if (data.status === 'cancelled') updates.status = 'cancelled';
+    if (data.status === 'cancelled') {
+      if (['completed', 'cancelled', 'rejected'].includes(c.status)) {
+        throw Object.assign(
+          new Error('This consultation cannot be cancelled'),
+          { status: 400 }
+        );
+      }
+
+      updates.status = 'cancelled';
+    }
   }
 
-  await db.collection('consultations').doc(consultationId).update(updates);
-  return { ...c, ...updates };
+  await db
+    .collection('consultations')
+    .doc(consultationId)
+    .update(updates);
+
+  return {
+    ...c,
+    ...updates,
+  };
 }
 
 async function getFarmerFarmHistoryForDoctor(doctorId, farmerId, farmId) {
@@ -254,5 +335,4 @@ module.exports = {
   getConsultation,
   updateConsultation,
   getFarmerFarmHistoryForDoctor,
-  generateMeetLink,
 };
