@@ -253,13 +253,18 @@ async function updateConsultation(consultationId, user, data) {
               error.message
             );
 
-            throw Object.assign(
-              new Error(
-                `Doctor accepted request, but Google Meet creation failed: ${error.message}`
-              ),
-              { status: 500 }
-            );
+            // Accept the consultation even if Meet is temporarily unavailable.
+            updates.meetingLink = null;
+            updates.meetingName = null;
+            updates.meetingCode = null;
+            updates.meetingCreatedAt = null;
+            updates.meetingCreationStatus = 'failed';
+
+            // Do not throw here. Allow the consultation status
+            // and other updates to be saved to Firestore.
           }
+ 
+          
         }
       }
 

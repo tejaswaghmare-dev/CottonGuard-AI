@@ -1,5 +1,12 @@
 const chatService = require('../services/chat.service');
-const { createPaymentOrder, confirmMockPayment } = require('../services/payment.service');
+
+const {
+  createPaymentOrder,
+  confirmMockPayment,
+  confirmRazorpayPayment,
+  listFarmerPayments,
+} = require('../services/payment.service');
+
 
 async function chat(req, res, next) {
   try {
@@ -48,13 +55,50 @@ async function createPayment(req, res, next) {
   }
 }
 
+
 async function confirmPayment(req, res, next) {
   try {
-    const payment = await confirmMockPayment(req.body.paymentId || req.params.paymentId, req.user.uid);
+    let payment;
+
+    if (req.body.razorpay_payment_id) {
+      payment = await confirmRazorpayPayment(
+        {
+          paymentId: req.body.paymentId,
+          razorpay_order_id: req.body.razorpay_order_id,
+          razorpay_payment_id: req.body.razorpay_payment_id,
+          razorpay_signature: req.body.razorpay_signature,
+        },
+        req.user.uid
+      );
+    } else {
+      payment = await confirmMockPayment(
+        req.body.paymentId || req.params.paymentId,
+        req.user.uid
+      );
+    }
+
     res.json({ success: true, payment });
   } catch (err) {
     next(err);
   }
 }
 
-module.exports = { chat, chatVoice, createPayment, confirmPayment };
+async function paymentHistory(req, res, next) {
+  try {
+    const payments = await listFarmerPayments(req.user.uid);
+    res.json({ success: true, payments });
+  } catch (err) {
+    next(err);
+  }
+}
+
+
+
+module.exports = {
+  chat,
+  chatVoice,
+  createPayment,
+  confirmPayment,
+  paymentHistory,
+};
+

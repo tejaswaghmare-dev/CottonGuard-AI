@@ -25,6 +25,38 @@ function createOAuthClient() {
   );
 }
 
+
+function saveTokens(tokens) {
+  let existingTokens = {};
+
+  if (fs.existsSync(TOKEN_PATH)) {
+    try {
+      existingTokens = JSON.parse(
+        fs.readFileSync(TOKEN_PATH, 'utf8')
+      );
+    } catch {
+      existingTokens = {};
+    }
+  }
+
+  // Google may omit refresh_token on subsequent authorizations.
+  const mergedTokens = {
+    ...existingTokens,
+    ...tokens,
+    refresh_token:
+      tokens.refresh_token || existingTokens.refresh_token,
+  };
+
+  fs.writeFileSync(
+    TOKEN_PATH,
+    JSON.stringify(mergedTokens, null, 2),
+    { mode: 0o600 }
+  );
+
+  return mergedTokens;
+}
+
+
 function getAuthorizationUrl() {
   const oauth2Client = createOAuthClient();
 
@@ -35,13 +67,25 @@ function getAuthorizationUrl() {
   });
 }
 
+
 async function exchangeCodeForTokens(code) {
   const oauth2Client = createOAuthClient();
 
   const { tokens } = await oauth2Client.getToken(code);
 
+  if (!tokens.refresh_token) {
+    const error = new Error(
+      'Google did not return a refresh token. Reauthorize the doctor account.'
+    );
+    error.status = 500;
+    throw error;
+  }
+
+  saveTokens(tokens);
+
   return tokens;
 }
+
 
 function getAuthorizedClient() {
   if (!fs.existsSync(TOKEN_PATH)) {

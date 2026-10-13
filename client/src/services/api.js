@@ -109,10 +109,22 @@ export const chatApi = {
   voice: (payload) => api.post('/chat/voice', payload).then((r) => r.data),
 };
 
+
 export const paymentApi = {
-  create: (payload) => api.post('/payment/create', payload).then((r) => r.data),
-  confirm: (paymentId) => api.post('/payment/confirm', { paymentId }).then((r) => r.data),
+  create: (payload) =>
+    api.post('/payment/create', payload).then((r) => r.data),
+
+  confirm: (payload) =>
+    api
+      .post(
+        '/payment/confirm',
+        typeof payload === 'string' ? { paymentId: payload } : payload
+      )
+      .then((r) => r.data),
+
+  history: () => api.get('/payment/history').then((r) => r.data),
 };
+
 
 
 export const mandiPricesApi = {
