@@ -34,7 +34,7 @@ export const farmsApi = {
   update: (farmId, payload) => api.put(`/farms/${farmId}`, payload).then((r) => r.data),
   remove: (farmId) => api.delete(`/farms/${farmId}`).then((r) => r.data),
   predictions: (farmId) => api.get(`/farms/${farmId}/predictions`).then((r) => r.data),
-  spread: (farmId) => api.get(`/farms/${farmId}/spread`).then((r) => r.data),
+  
 };
 
 export const predictionsApi = {
@@ -75,11 +75,34 @@ export const consultationsApi = {
   update: (id, payload) => api.put(`/consultations/${id}`, payload).then((r) => r.data),
   quota: () => api.get('/consultations/quota').then((r) => r.data),
 
+  
+  getTreatmentPlan: (id) =>
+    api.get(`/consultations/${id}/treatment-plan`).then((r) => r.data),
+
+  saveTreatmentPlan: (id, payload) =>
+    api.put(`/consultations/${id}/treatment-plan`, payload).then((r) => r.data),
+
+  updateTreatmentTask: (id, taskId, completed) =>
+    api.patch(
+      `/consultations/${id}/treatment-plan/tasks/${taskId}`,
+      { completed }
+    ).then((r) => r.data),
+
+
   downloadDoctorReport: (id) =>
   api.get(`/consultations/${id}/report/pdf`, {
     responseType: 'blob',
   }),
+
+  
+generateTreatmentPlan: (id, payload) =>
+  api
+    .post(`/consultations/${id}/treatment-plan/generate`, payload)
+    .then((response) => response.data),
+
 };
+
+
 
 export const chatApi = {
   send: (payload) => api.post('/chat', payload).then((r) => r.data),
@@ -90,5 +113,12 @@ export const paymentApi = {
   create: (payload) => api.post('/payment/create', payload).then((r) => r.data),
   confirm: (paymentId) => api.post('/payment/confirm', { paymentId }).then((r) => r.data),
 };
+
+
+export const mandiPricesApi = {
+  list: (params = {}) =>
+    api.get('/mandi-prices', { params }).then((response) => response.data),
+};
+
 
 export default api;

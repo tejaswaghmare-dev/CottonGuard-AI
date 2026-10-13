@@ -21,6 +21,7 @@ const googleRoutes = require('./routes/google.routes');
 const predCtrl = require('./controllers/prediction.controller');
 const { authenticate } = require('./middleware/auth');
 const { requireRole, ROLES } = require('./middleware/roles');
+const mandiPriceRoutes = require('./routes/mandiPrice.routes');
 
 initFirebase();
 
@@ -36,6 +37,8 @@ app.use(
 app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+app.use('/api/mandi-prices', mandiPriceRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({

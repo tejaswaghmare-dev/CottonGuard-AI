@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Chatbot from './components/Chatbot';
 import MobileNav from './components/MobileNav';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
@@ -17,6 +18,7 @@ import Result from './pages/farmer/Result';
 import Doctors from './pages/farmer/Doctors';
 import Consultations from './pages/farmer/Consultations';
 import ProductsBrowse from './pages/farmer/ProductsBrowse';
+import MandiPrices from './pages/farmer/MandiPrices';
 import OwnerDashboard from './pages/owner/OwnerDashboard';
 import OwnerProducts from './pages/owner/OwnerProducts';
 import DoctorDashboard from './pages/doctor/DoctorDashboard';
@@ -46,6 +48,7 @@ export default function App() {
                 <Route path="/doctors" element={<Doctors />} />
                 <Route path="/consultations" element={<Consultations />} />
                 <Route path="/products" element={<ProductsBrowse />} />
+                <Route path="/mandi-prices" element={<MandiPrices />} />
               </Route>
 
               <Route element={<ProtectedRoute roles={['pesticide_owner']} />}>
@@ -62,9 +65,11 @@ export default function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
             <MobileNav />
+               <Chatbot />
           </div>
         </BrowserRouter>
       </AuthProvider>
     </LanguageProvider>
   );
 }
+

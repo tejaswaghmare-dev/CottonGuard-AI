@@ -34,8 +34,12 @@ export default function Navbar() {
     <header className="topnav">
       <div className="container topnav-inner">
         <Link to={user ? (role === 'farmer' ? '/dashboard' : role === 'pesticide_owner' ? '/owner' : role === 'leaf_doctor' ? '/doctor' : '/onboarding') : '/'} className="brand">
-          <div className="brand-mark"><Leaf size={20} /></div>
-          <span>{t.brand}</span>
+                  <img
+            src="/icons.svg"
+            alt="CottonGuard AI Logo"
+            className="brand-logo"
+          />
+          
         </Link>
 
         {user && profile?.role && (

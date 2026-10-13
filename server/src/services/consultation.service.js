@@ -325,6 +325,151 @@ async function getFarmerFarmHistoryForDoctor(doctorId, farmerId, farmId) {
   return list;
 }
 
+
+async function getTreatmentPlan(consultationId, user) {
+  const db = getDb();
+
+  // Reuse the existing ownership check.
+  const consultation = await getConsultation(consultationId, user);
+  const snap = await db
+    .collection('treatmentPlans')
+    .doc(consultationId)
+    .get();
+
+  if (!snap.exists) {
+    return { consultation, treatmentPlan: null };
+  }
+
+  const plan = snap.data();
+
+  // Farmers can only see plans published by their doctor.
+  if (user.role === 'farmer' && !plan.published) {
+    return { consultation, treatmentPlan: null };
+  }
+
+  return { consultation, treatmentPlan: plan };
+}
+
+async function saveTreatmentPlan(consultationId, doctorId, payload) {
+  const db = getDb();
+  const consultation = await getConsultation(consultationId, {
+    uid: doctorId,
+    role: 'leaf_doctor',
+  });
+
+  if (!['accepted', 'completed'].includes(consultation.status)) {
+    throw Object.assign(
+      new Error('Accept the consultation before creating a treatment plan.'),
+      { status: 400 }
+    );
+  }
+
+  const durationDays = Number(payload.durationDays);
+  if (![7, 10].includes(durationDays)) {
+    throw Object.assign(
+      new Error('Treatment plan duration must be 7 or 10 days.'),
+      { status: 400 }
+    );
+  }
+
+  if (!Array.isArray(payload.days) || payload.days.length !== durationDays) {
+    throw Object.assign(
+      new Error(`Please provide exactly ${durationDays} days of tasks.`),
+      { status: 400 }
+    );
+  }
+
+  const days = payload.days.map((day, index) => {
+    if (!Array.isArray(day.tasks)) {
+      throw Object.assign(
+        new Error(`Tasks are missing for Day ${index + 1}.`),
+        { status: 400 }
+      );
+    }
+
+    return {
+      day: index + 1,
+      title: String(day.title || `Day ${index + 1}`).trim(),
+      tasks: day.tasks
+        .map((task) => ({
+          taskId: task.taskId || uuidv4(),
+          title: String(task.title || '').trim(),
+          details: String(task.details || '').trim(),
+          completed: false,
+          completedAt: null,
+        }))
+        .filter((task) => task.title),
+    };
+  });
+
+  const now = new Date().toISOString();
+  const plan = {
+    consultationId,
+    farmerId: consultation.farmerId,
+    doctorId,
+    farmId: consultation.farmId || null,
+    title: String(payload.title || 'Cotton Treatment Plan').trim(),
+    doctorInstructions: String(payload.doctorInstructions || '').trim(),
+    durationDays,
+    days,
+    published: payload.published === true,
+    createdAt: payload.createdAt || now,
+    updatedAt: now,
+    publishedAt: payload.published === true ? now : null,
+  };
+
+  await db.collection('treatmentPlans').doc(consultationId).set(plan);
+  return plan;
+}
+
+async function updateTreatmentTask(consultationId, user, taskId, completed) {
+  if (typeof completed !== 'boolean') {
+    throw Object.assign(
+      new Error('completed must be true or false.'),
+      { status: 400 }
+    );
+  }
+
+  const db = getDb();
+  const { treatmentPlan } = await getTreatmentPlan(consultationId, user);
+
+  if (!treatmentPlan) {
+    throw Object.assign(
+      new Error('No published treatment plan is available.'),
+      { status: 404 }
+    );
+  }
+
+  if (user.role !== 'farmer' || treatmentPlan.farmerId !== user.uid) {
+    throw Object.assign(new Error('Access denied.'), { status: 403 });
+  }
+
+  let found = false;
+  const now = new Date().toISOString();
+
+  const days = treatmentPlan.days.map((day) => ({
+    ...day,
+    tasks: day.tasks.map((task) => {
+      if (task.taskId !== taskId) return task;
+      found = true;
+      return {
+        ...task,
+        completed,
+        completedAt: completed ? now : null,
+      };
+    }),
+  }));
+
+  if (!found) {
+    throw Object.assign(new Error('Treatment task not found.'), { status: 404 });
+  }
+
+  const updated = { ...treatmentPlan, days, updatedAt: now };
+  await db.collection('treatmentPlans').doc(consultationId).set(updated);
+  return updated;
+}
+
+
 module.exports = {
   listDoctors,
   getDoctor,
@@ -335,4 +480,7 @@ module.exports = {
   getConsultation,
   updateConsultation,
   getFarmerFarmHistoryForDoctor,
+  getTreatmentPlan,
+  saveTreatmentPlan,
+  updateTreatmentTask,
 };

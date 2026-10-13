@@ -1,5 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <rect width="64" height="64" rx="14" fill="#2f7d4a"/>
-  <path d="M32 12c-6 10-14 16-14 26a14 14 0 0028 0c0-10-8-16-14-26z" fill="#f7f4ee"/>
-  <circle cx="32" cy="40" r="5" fill="#1f5a34"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <!-- Background Shield Gradient -->
+    <linearGradient id="favShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1B5E20" />
+      <stop offset="100%" stop-color="#2E7D32" />
+    </linearGradient>
+
+    <!-- Leaf Gradient -->
+    <linearGradient id="favLeafGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4CAF50" />
+      <stop offset="100%" stop-color="#81C784" />
+    </linearGradient>
+
+    <!-- AI Accent Gradient -->
+    <linearGradient id="favTechGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E676" />
+      <stop offset="100%" stop-color="#00B0FF" />
+    </linearGradient>
+
+    <!-- Drop Shadow -->
+    <filter id="favShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.2" />
+    </filter>
+  </defs>
+
+  <!-- Circular/Rounded Favicon Container Background -->
+  <rect x="5" y="5" width="90" height="90" rx="22" fill="url(#favShieldGrad)" filter="url(#favShadow)" />
+
+  <!-- Tech Circuit Node Accent (Top Right) -->
+  <circle cx="72" cy="28" r="4" fill="url(#favTechGrad)" />
+  <path d="M 60,35 L 72,28" stroke="url(#favTechGrad)" stroke-width="2" stroke-linecap="round" opacity="0.8" />
+
+  <!-- Stylized Cotton Boll Base -->
+  <path d="M 35,55 C 28,45 35,32 45,35 C 48,27 60,27 63,35 C 73,32 80,45 73,55 C 80,68 68,80 54,78 C 40,80 28,68 35,55 Z" 
+        fill="#FFFFFF" />
+
+  <!-- AI Leaf Motif (Crop Health Indicator) -->
+  <path d="M 50,40 C 65,40 78,52 75,70 C 62,70 50,60 50,40 Z" 
+        fill="url(#favLeafGrad)" />
+  <path d="M 50,40 C 56,52 65,60 72,65" 
+        stroke="#FFFFFF" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        fill="none" />
 </svg>

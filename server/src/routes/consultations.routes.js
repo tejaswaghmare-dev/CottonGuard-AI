@@ -21,6 +21,38 @@ router.get(
   requireRole(ROLES.LEAF_DOCTOR),
   ctrl.downloadDoctorReport
 );
+
+
+router.get(
+  '/:consultationId/treatment-plan',
+  authenticate,
+  requireRole(ROLES.FARMER, ROLES.LEAF_DOCTOR),
+  ctrl.getTreatmentPlan
+);
+
+router.put(
+  '/:consultationId/treatment-plan',
+  authenticate,
+  requireRole(ROLES.LEAF_DOCTOR),
+  ctrl.saveTreatmentPlan
+);
+
+router.patch(
+  '/:consultationId/treatment-plan/tasks/:taskId',
+  authenticate,
+  requireRole(ROLES.FARMER),
+  ctrl.updateTreatmentTask
+);
+
+
+router.post(
+  '/:consultationId/treatment-plan/generate',
+  authenticate,
+  requireRole(ROLES.LEAF_DOCTOR),
+  ctrl.generateTreatmentPlan
+);
+
+
 router.get('/:consultationId', authenticate, ctrl.getOne);
 router.put('/:consultationId', authenticate, ctrl.update);
 

@@ -182,3 +182,884 @@
     border-right-color: var(--border);
   }
 }
+
+.mandi-page {
+  width: min(1400px, 100%);
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+  color: var(--text-primary, #17251b);
+}
+
+.mandi-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.mandi-eyebrow {
+  margin: 0 0 8px;
+  color: #32834a;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.mandi-heading h1 {
+  margin: 0;
+  font-size: clamp(26px, 3vw, 36px);
+  letter-spacing: -1px;
+}
+
+.mandi-subtitle {
+  margin: 10px 0 0;
+  color: #69756d;
+  line-height: 1.6;
+}
+
+.mandi-refresh,
+.mandi-filter-actions button,
+.mandi-error button {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 17px;
+  background: #267640;
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mandi-refresh:disabled,
+.mandi-filter-actions button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.mandi-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.mandi-stat,
+.mandi-panel {
+  border: 1px solid #e3eae3;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 5px 20px rgb(24 65 35 / 4%);
+}
+
+.mandi-stat {
+  padding: 20px;
+}
+
+.mandi-stat span,
+.mandi-stat small {
+  display: block;
+  color: #69756d;
+}
+
+.mandi-stat span {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mandi-stat strong {
+  display: block;
+  margin: 10px 0 7px;
+  font-size: clamp(23px, 3vw, 31px);
+  overflow-wrap: anywhere;
+}
+
+.mandi-stat small {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.mandi-panel {
+  margin-bottom: 22px;
+  overflow: hidden;
+}
+
+.mandi-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 22px 16px;
+}
+
+.mandi-panel-heading h2 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.mandi-panel-heading p {
+  margin: 7px 0 0;
+  color: #758077;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.mandi-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  padding: 8px 22px 22px;
+}
+
+.mandi-filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #4f5d52;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.mandi-filters input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #dce5dc;
+  border-radius: 9px;
+  background: #fff;
+  color: #17251b;
+  font: inherit;
+  font-weight: 400;
+  outline: none;
+}
+
+.mandi-filters input:focus {
+  border-color: #32834a;
+  box-shadow: 0 0 0 3px rgb(50 131 74 / 12%);
+}
+
+.mandi-filter-actions {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+}
+
+.mandi-filter-actions .mandi-reset {
+  border: 1px solid #dce5dc;
+  background: #fff;
+  color: #405046;
+}
+
+.mandi-table-heading {
+  border-bottom: 1px solid #edf0ed;
+}
+
+.mandi-live-label {
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: #edf8ef;
+  padding: 8px 10px;
+  color: #267640;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+}
+
+.mandi-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.mandi-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.mandi-table th,
+.mandi-table td {
+  padding: 15px 16px;
+  border-bottom: 1px solid #edf0ed;
+  white-space: nowrap;
+}
+
+.mandi-table th {
+  background: #f7faf7;
+  color: #647167;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.mandi-table td {
+  color: #3f4d42;
+}
+
+.mandi-table td strong,
+.mandi-table td small {
+  display: block;
+}
+
+.mandi-table td small {
+  margin-top: 5px;
+  color: #7a857d;
+  font-size: 11px;
+  white-space: normal;
+}
+
+.mandi-table .mandi-modal-price {
+  color: #267640;
+  font-size: 14px;
+}
+
+.mandi-empty {
+  padding: 38px 20px;
+  text-align: center;
+  color: #637067;
+  line-height: 1.6;
+}
+
+.mandi-empty p {
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+.mandi-error {
+  margin: 18px;
+  padding: 18px;
+  border: 1px solid #f1cccc;
+  border-radius: 12px;
+  background: #fff6f6;
+  color: #922e2e;
+}
+
+.mandi-error p {
+  line-height: 1.5;
+}
+
+.mandi-disclaimer {
+  margin: 0;
+  padding: 16px 20px;
+  background: #fbfcfb;
+  color: #758077;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+  .mandi-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .mandi-page {
+    padding: 22px 14px 36px;
+  }
+
+  .mandi-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mandi-stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .mandi-stat {
+    padding: 16px;
+  }
+
+  .mandi-filters {
+    grid-template-columns: 1fr;
+    padding: 8px 16px 18px;
+  }
+
+  .mandi-panel-heading {
+    padding: 18px 16px 14px;
+  }
+
+  .mandi-table th,
+  .mandi-table td {
+    padding: 13px 12px;
+  }
+}
+
+/* Farm selector for the mandi prices page */
+.mandi-farm-select {
+  display: grid;
+  gap: 14px;
+}
+
+.mandi-farm-select label {
+  display: grid;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.mandi-farm-select select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color, #d1d5db);
+  border-radius: 8px;
+  background: var(--card-bg, #fff);
+  color: inherit;
+  font: inherit;
+}
+
+.mandi-farm-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--surface-color, #f5f7f5);
+  font-size: 13px;
+}
+
+.mandi-stat-text {
+  overflow-wrap: anywhere;
+}
+
+.mandi-distance {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.mandi-directions {
+  display: inline-block;
+  color: var(--primary-color, #287a42);
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.mandi-directions:hover {
+  text-decoration: underline;
+}
+
+.mandi-table-wrap {
+  overflow-x: auto;
+}
+
+.mandi-table {
+  min-width: 1050px;
+}
+
+/* ==========================================
+   COTTONGUARD AI - MANDI PRICES PAGE
+   ========================================== */
+
+.mandi-page {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 28px;
+  color: var(--text-primary, #17251c);
+  box-sizing: border-box;
+}
+
+.mandi-page *,
+.mandi-page *::before,
+.mandi-page *::after {
+  box-sizing: border-box;
+}
+
+.mandi-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.mandi-heading > div {
+  min-width: 0;
+}
+
+.mandi-eyebrow {
+  margin: 0 0 9px;
+  color: #39804d;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.mandi-heading h1 {
+  margin: 0;
+  color: var(--text-primary, #17251c);
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.mandi-subtitle {
+  max-width: 720px;
+  margin: 12px 0 0;
+  color: var(--text-secondary, #647067);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.mandi-refresh {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: #267442;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.mandi-refresh:hover:not(:disabled) {
+  background: #1d5d34;
+  transform: translateY(-1px);
+}
+
+.mandi-refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Panels */
+
+.mandi-panel {
+  min-width: 0;
+  margin-bottom: 22px;
+  padding: 24px;
+  border: 1px solid var(--border-color, #e1e8e2);
+  border-radius: 16px;
+  background: var(--card-bg, #fff);
+  box-shadow: 0 4px 18px rgba(24, 54, 32, 0.045);
+}
+
+.mandi-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.mandi-panel-heading h2 {
+  margin: 0;
+  color: var(--text-primary, #17251c);
+  font-size: 19px;
+  font-weight: 750;
+}
+
+.mandi-panel-heading p {
+  margin: 7px 0 0;
+  color: var(--text-secondary, #6b756e);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.mandi-live-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 11px;
+  border: 1px solid #cce7d3;
+  border-radius: 20px;
+  background: #eff9f1;
+  color: #267442;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+}
+
+.mandi-live-label::before {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #32a852;
+  content: "";
+}
+
+/* Farm selection */
+
+.mandi-farm-select {
+  display: grid;
+  gap: 15px;
+}
+
+.mandi-farm-select label {
+  display: grid;
+  gap: 9px;
+  color: var(--text-primary, #26372b);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.mandi-farm-select select,
+.mandi-filters input {
+  width: 100%;
+  min-width: 0;
+  min-height: 45px;
+  padding: 11px 13px;
+  border: 1px solid var(--border-color, #d5ded7);
+  border-radius: 9px;
+  outline: none;
+  background: var(--input-bg, #fff);
+  color: var(--text-primary, #17251c);
+  font: inherit;
+  font-size: 14px;
+}
+
+.mandi-farm-select select:focus,
+.mandi-filters input:focus {
+  border-color: #37874f;
+  box-shadow: 0 0 0 3px rgba(55, 135, 79, 0.12);
+}
+
+.mandi-farm-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding: 15px;
+  border: 1px solid #e0eee3;
+  border-radius: 10px;
+  background: #f5faf6;
+  color: #526257;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.mandi-farm-details strong {
+  color: #263d2d;
+}
+
+/* Summary statistics */
+
+.mandi-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.mandi-stat {
+  display: flex;
+  min-width: 0;
+  min-height: 142px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 9px;
+  padding: 22px;
+  border: 1px solid var(--border-color, #e1e8e2);
+  border-radius: 14px;
+  background: var(--card-bg, #fff);
+  box-shadow: 0 4px 16px rgba(24, 54, 32, 0.04);
+}
+
+.mandi-stat > span {
+  color: var(--text-secondary, #6b756e);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mandi-stat > strong {
+  max-width: 100%;
+  color: var(--text-primary, #17251c);
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 800;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.mandi-stat .mandi-stat-text {
+  font-size: clamp(17px, 1.8vw, 23px);
+}
+
+.mandi-stat > small {
+  color: var(--text-secondary, #79827b);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* Search filters */
+
+.mandi-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.mandi-filters label {
+  display: grid;
+  gap: 8px;
+  color: var(--text-primary, #26372b);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.mandi-filter-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  grid-column: 1 / -1;
+  margin-top: 3px;
+}
+
+.mandi-filter-actions button,
+.mandi-error button {
+  min-height: 42px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 9px;
+  background: #267442;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mandi-filter-actions button:hover:not(:disabled),
+.mandi-error button:hover {
+  background: #1d5d34;
+}
+
+.mandi-filter-actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.mandi-filter-actions .mandi-reset {
+  border: 1px solid var(--border-color, #d5ded7);
+  background: transparent;
+  color: var(--text-primary, #26372b);
+}
+
+.mandi-filter-actions .mandi-reset:hover:not(:disabled) {
+  background: var(--surface-color, #f3f6f3);
+}
+
+/* Results table */
+
+.mandi-table-heading {
+  align-items: flex-start;
+}
+
+.mandi-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border-color, #e4e9e5);
+  border-radius: 11px;
+}
+
+.mandi-table {
+  width: 100%;
+  min-width: 1150px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--card-bg, #fff);
+  font-size: 12px;
+  text-align: left;
+}
+
+.mandi-table thead th {
+  padding: 15px 14px;
+  border-bottom: 1px solid #dfe7e0;
+  background: #f3f8f4;
+  color: #435448;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.mandi-table tbody td {
+  padding: 15px 14px;
+  border-bottom: 1px solid var(--border-color, #edf0ed);
+  color: var(--text-primary, #334238);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.mandi-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.mandi-table tbody tr:hover {
+  background: #f8fbf8;
+}
+
+.mandi-table td strong {
+  display: block;
+  color: var(--text-primary, #25382a);
+  font-size: 12px;
+}
+
+.mandi-table td small {
+  display: block;
+  margin-top: 5px;
+  color: var(--text-secondary, #788179);
+  font-size: 10px;
+  line-height: 1.5;
+  white-space: normal;
+}
+
+.mandi-table .mandi-distance {
+  color: #267442;
+  font-weight: 800;
+}
+
+.mandi-modal-price {
+  color: #267442 !important;
+  font-size: 13px !important;
+}
+
+.mandi-directions {
+  display: inline-block;
+  padding: 8px 10px;
+  border: 1px solid #cfe5d4;
+  border-radius: 7px;
+  background: #f0f8f1;
+  color: #267442;
+  font-size: 11px;
+  font-weight: 750;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.mandi-directions:hover {
+  border-color: #267442;
+  background: #e4f3e7;
+}
+
+/* Loading, empty, and error states */
+
+.mandi-empty {
+  padding: 32px 20px;
+  border: 1px dashed var(--border-color, #d7e1d8);
+  border-radius: 11px;
+  color: var(--text-secondary, #6b756e);
+  font-size: 14px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.mandi-empty strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text-primary, #25382a);
+}
+
+.mandi-empty p {
+  margin: 5px 0 0;
+}
+
+.mandi-error {
+  padding: 18px;
+  border: 1px solid #f0caca;
+  border-radius: 10px;
+  background: #fff6f6;
+  color: #8d3030;
+}
+
+.mandi-error strong {
+  display: block;
+  margin-bottom: 7px;
+}
+
+.mandi-error p {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.mandi-disclaimer {
+  margin: 17px 0 0;
+  color: var(--text-secondary, #7b847d);
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+/* Responsive layout */
+
+@media (max-width: 900px) {
+  .mandi-page {
+    padding: 20px;
+  }
+
+  .mandi-stats {
+    gap: 12px;
+  }
+
+  .mandi-stat {
+    padding: 17px;
+  }
+
+  .mandi-panel {
+    padding: 19px;
+  }
+}
+
+@media (max-width: 600px) {
+  .mandi-page {
+    padding: 14px;
+  }
+
+  .mandi-heading {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .mandi-refresh {
+    width: 100%;
+  }
+
+  .mandi-stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .mandi-stat {
+    min-height: 105px;
+  }
+
+  .mandi-filters {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .mandi-filter-actions {
+    grid-column: auto;
+  }
+
+  .mandi-filter-actions button {
+    flex: 1;
+  }
+
+  .mandi-panel {
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  .mandi-panel-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mandi-farm-details {
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .mandi-table-heading .mandi-live-label {
+    align-self: flex-start;
+  }
+}
