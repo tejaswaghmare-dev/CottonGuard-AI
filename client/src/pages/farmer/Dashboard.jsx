@@ -4,29 +4,36 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { farmsApi, mandiPricesApi } from '../../services/api';
-import Chatbot from '../../components/Chatbot';
 
 const galleryImages = [
   {
-    src: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80',
+    src: '/images/cottonfileds.jpg',
     title: 'Healthy Fields',
     description: 'Keep track of your farm and crops.',
   },
   {
-    src: 'https://images.unsplash.com/photo-1499529112087-3cb3b73cec95?auto=format&fit=crop&w=800&q=80',
+    src: '/images/Smart Farming.jpg',
     title: 'Smart Farming',
     description: 'Make informed crop-care decisions.',
   },
   {
-    src: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=800&q=80',
+    src: '/images/planthealth.jpg',
     title: 'Plant Health',
     description: 'Check leaves for signs of disease.',
   },
   {
-    src: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=800&q=80',
+    src: '/images/betterharvest.jpg',
     title: 'Better Harvests',
     description: 'Support healthier growing seasons.',
   },
+];
+
+const farmImages = [
+  '/images/farm-a.jpg',
+  '/images/farm-b.jpg',
+  '/images/farm-c.jpg',
+  '/images/cotton-leaf.jpg',
+  '/images/healthy-cotton.jpg',
 ];
 
 export default function FarmerDashboard() {
@@ -77,42 +84,44 @@ export default function FarmerDashboard() {
     };
   }, []);
 
-  
-useEffect(() => {
-  let mounted = true;
+  useEffect(() => {
+    let mounted = true;
 
-  async function loadMarketPrices() {
-    try {
-      setMarketLoading(true);
-      setMarketError('');
+    async function loadMarketPrices() {
+      try {
+        setMarketLoading(true);
+        setMarketError('');
 
-      const result = await mandiPricesApi.list({
-        state: 'Maharashtra',
-        commodity: 'Cotton',
-        limit: 5,
-      });
+        const result = await mandiPricesApi.list({
+          state: 'Maharashtra',
+          commodity: 'Cotton',
+          limit: 5,
+        });
 
-      if (mounted) {
-        setMarketPrices(result.records || []);
-      }
-    } catch (err) {
-      if (mounted) {
-        setMarketError(err.message || 'Unable to load market prices.');
-      }
-    } finally {
-      if (mounted) {
-        setMarketLoading(false);
+        if (mounted) {
+          setMarketPrices(result.records || []);
+        }
+      } catch (err) {
+        if (mounted) {
+          setMarketError(
+            err.response?.data?.message ||
+              err.message ||
+              'Unable to load market prices.'
+          );
+        }
+      } finally {
+        if (mounted) {
+          setMarketLoading(false);
+        }
       }
     }
-  }
 
-  loadMarketPrices();
+    loadMarketPrices();
 
-  return () => {
-    mounted = false;
-  };
-}, []);
-
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const remaining = quota?.remaining ?? '—';
   const rec = latest?.recommendation?.immediateActions?.[0];
@@ -160,6 +169,7 @@ useEffect(() => {
             <div className="hero-orbit hero-orbit-one" />
             <div className="hero-orbit hero-orbit-two" />
             <div className="hero-leaf">🌿</div>
+
             <div className="hero-floating-card">
               <span className="floating-icon">✦</span>
               <div>
@@ -180,6 +190,7 @@ useEffect(() => {
                 Better insights for every growing season.
               </p>
             </div>
+
             <span className="gallery-counter">01 — 04</span>
           </div>
 
@@ -188,31 +199,35 @@ useEffect(() => {
             aria-label="Agriculture image gallery"
           >
             <div className="farm-gallery-track">
-              {[...galleryImages, ...galleryImages].map((image, index) => (
-                <article
-                  className="farm-gallery-card"
-                  key={`${image.title}-${index}`}
-                >
-                  <img
-                    src={image.src}
-                    alt={image.title}
-                    loading={index < 4 ? 'eager' : 'lazy'}
-                    onError={(event) => {
-                      event.currentTarget.style.visibility = 'hidden';
-                    }}
-                  />
+              {[...galleryImages, ...galleryImages].map(
+                (image, index) => (
+                  <article
+                    className="farm-gallery-card"
+                    key={`${image.title}-${index}`}
+                  >
+                    <img
+                      src={image.src}
+                      alt={image.title}
+                      loading={index < 4 ? 'eager' : 'lazy'}
+                      onError={(event) => {
+                        event.currentTarget.onerror = null;
+                        event.currentTarget.src =
+                          '/images/cotton-farm.jpg';
+                      }}
+                    />
 
-                  <div className="gallery-image-shade" />
+                    <div className="gallery-image-shade" />
 
-                  <div className="gallery-card-content">
-                    <span className="gallery-number">
-                      {String((index % 4) + 1).padStart(2, '0')}
-                    </span>
-                    <h3>{image.title}</h3>
-                    <p>{image.description}</p>
-                  </div>
-                </article>
-              ))}
+                    <div className="gallery-card-content">
+                      <span className="gallery-number">
+                        {String((index % 4) + 1).padStart(2, '0')}
+                      </span>
+                      <h3>{image.title}</h3>
+                      <p>{image.description}</p>
+                    </div>
+                  </article>
+                )
+              )}
             </div>
           </div>
 
@@ -255,7 +270,9 @@ useEffect(() => {
                 <div className="value stat-value-small">
                   {latest?.disease || '—'}
                 </div>
-                <p className="stat-caption">Latest detected disease</p>
+                <p className="stat-caption">
+                  Latest detected disease
+                </p>
               </div>
 
               <div className="card stat-card farmer-stat">
@@ -354,16 +371,16 @@ useEffect(() => {
                     >
                       <div className="farm-card-image">
                         <img
-                          src={
-                            farm.imageUrl ||
-                            galleryImages[index % galleryImages.length].src
-                          }
+                          src={farmImages[index % farmImages.length]}
                           alt={`${farm.farmName} farm`}
                           loading="lazy"
                           onError={(event) => {
-                            event.currentTarget.style.visibility = 'hidden';
+                            event.currentTarget.onerror = null;
+                            event.currentTarget.src =
+                              '/images/cotton-farm.jpg';
                           }}
                         />
+
                         <span className="farm-image-label">
                           🌿 {farm.crop || 'Farm'}
                         </span>
@@ -384,6 +401,7 @@ useEffect(() => {
                             <strong>{farm.area ?? '—'}</strong>
                             <small>{farm.areaUnit || 'Area'}</small>
                           </span>
+
                           <span>
                             <strong>{farm.crop || '—'}</strong>
                             <small>Crop type</small>
@@ -400,6 +418,7 @@ useEffect(() => {
             {rec && (
               <section className="farmer-recommendation">
                 <div className="recommendation-symbol">✦</div>
+
                 <div className="recommendation-content">
                   <span className="eyebrow">AI CROP-CARE TIP</span>
                   <h3>{t.latestRecommendation}</h3>
@@ -408,190 +427,217 @@ useEffect(() => {
               </section>
             )}
 
-            {/* GET STARTED PANEL */}
-            
-{/* FARMER COMMUNITY, SCHEMES & MARKET PRICES */}
-<section className="farmer-tools-section">
-  <div className="section-title">
-    <div>
-      <span className="eyebrow">MORE FOR YOUR FARM</span>
-      <h2>Farmer Resources</h2>
-      <p className="muted">
-        Community support, government schemes and cotton market information.
-      </p>
-    </div>
-  </div>
-
-  <div className="farmer-tools-grid">
-    {/* WhatsApp community */}
-    <article className="card farmer-tool-card whatsapp-tool">
-      <div className="farmer-tool-icon">💬</div>
-      <span className="farmer-tool-label">FARMER COMMUNITY</span>
-      <h3>Connect with Farmers</h3>
-      <p>
-        Join the CottonGuard farmer community to share experiences
-        and discuss crop-care tips.
-      </p>
-      <a
-        className="farmer-tool-button whatsapp-button"
-        href="https://chat.whatsapp.com/Bn306Tf0DFFBB53PrGZwv9"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Join WhatsApp Group ↗
-      </a>
-      <small className="farmer-tool-note">
-        Replace the link with your actual group invitation.
-      </small>
-    </article>
-
-    {/* Government schemes */}
-    <article className="card farmer-tool-card">
-      <div className="farmer-tool-icon">🏛️</div>
-      <span className="farmer-tool-label">GOVERNMENT BENEFITS</span>
-      <h3>Cotton Farmer Schemes</h3>
-      <p>
-        Explore government schemes and check eligibility,
-        benefits and application requirements.
-      </p>
-
-      <div className="farmer-resource-links">
-        <a
-          href="https://www.myscheme.gov.in/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Find eligible schemes ↗
-        </a>
-        <a
-          href="https://cotcorp.org.in/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Cotton Corporation of India ↗
-        </a>
-        <a
-          href="https://pmkisan.gov.in/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          PM-KISAN ↗
-        </a>
-      </div>
-      <small className="farmer-tool-note">
-        Check official websites for current eligibility and deadlines.
-      </small>
-    </article>
-
-        {/* Cotton market prices */}
-    <article className="card farmer-tool-card market-tool">
-      <div className="farmer-tool-icon">📈</div>
-      <span className="farmer-tool-label">COTTON MARKET</span>
-      <h3>Nearby Mandi Prices</h3>
-      <p>
-        Find cotton prices for your district and nearby agricultural markets.
-      </p>
-
-      <div className="market-location">
-        <span>📍 Your farm location</span>
-        <strong>
-          {farms[0]?.locationLabel || 'Add your farm location'}
-        </strong>
-      </div>
-
-      <div className="market-data-status">
-        {marketLoading ? (
-          <p>Loading cotton market prices...</p>
-        ) : marketError ? (
-          <div>
-            <strong>Market prices unavailable</strong>
-            <p>{marketError}</p>
-
-            <button
-              type="button"
-              className="farmer-tool-button"
-              onClick={async () => {
-                try {
-                  setMarketLoading(true);
-                  setMarketError('');
-
-                  const result = await mandiPricesApi.list({
-                    state: 'Maharashtra',
-                    commodity: 'Cotton',
-                    limit: 5,
-                  });
-
-                  setMarketPrices(result.records || []);
-                } catch (err) {
-                  setMarketError(
-                    err.response?.data?.message ||
-                    err.message ||
-                    'Unable to load market prices.'
-                  );
-                } finally {
-                  setMarketLoading(false);
-                }
-              }}
-            >
-              Retry
-            </button>
-          </div>
-        ) : marketPrices.length === 0 ? (
-          <div>
-            <strong>No market records found</strong>
-            <p>Try searching for more markets and dates.</p>
-          </div>
-        ) : (
-          <div className="market-price-list">
-            {marketPrices.map((item, index) => (
-              <div
-                className="market-price-item"
-                key={`${item.market || 'market'}-${item.arrivalDate || 'date'}-${index}`}
-              >
+            {/* FARMER RESOURCES, SCHEMES & MARKET PRICES */}
+            <section className="farmer-tools-section">
+              <div className="section-title">
                 <div>
-                  <strong>{item.market || 'Market unavailable'}</strong>
-                  <p>
-                    {[item.district, item.state]
-                      .filter(Boolean)
-                      .join(', ')}
+                  <span className="eyebrow">MORE FOR YOUR FARM</span>
+                  <h2>Farmer Resources</h2>
+                  <p className="muted">
+                    Community support, government schemes and cotton
+                    market information.
                   </p>
-                  <small>
-                    Arrival date: {item.arrivalDate || 'Not provided'}
-                  </small>
-                </div>
-
-                <div>
-                  <strong>
-                    {item.modalPrice !== null &&
-                    item.modalPrice !== undefined &&
-                    item.modalPrice !== ''
-                      ? `₹${Number(item.modalPrice).toLocaleString('en-IN')}`
-                      : '—'}
-                  </strong>
-                  <small>Modal price / quintal</small>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
 
-      <Link to="/mandi-prices" className="farmer-tool-button">
-        View all mandi prices →
-      </Link>
+              <div className="farmer-tools-grid">
+                {/* WHATSAPP COMMUNITY */}
+                <article className="card farmer-tool-card whatsapp-tool">
+                  <div className="farmer-tool-icon">💬</div>
+                  <span className="farmer-tool-label">
+                    FARMER COMMUNITY
+                  </span>
+                  <h3>Connect with Farmers</h3>
+                  <p>
+                    Join the CottonGuard farmer community to share
+                    experiences and discuss crop-care tips.
+                  </p>
 
-      <a
-        className="farmer-tool-button"
-        href="https://agmarknet.gov.in/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Check AGMARKNET ↗
-      </a>
-    </article>
-  </div>
-</section>
+                  <a
+                    className="farmer-tool-button whatsapp-button"
+                    href="https://chat.whatsapp.com/Bn306Tf0DFFBB53PrGZwv9"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Join WhatsApp Group ↗
+                  </a>
 
+                  <small className="farmer-tool-note">
+                    Replace the link with your actual group invitation.
+                  </small>
+                </article>
+
+                {/* GOVERNMENT SCHEMES */}
+                <article className="card farmer-tool-card">
+                  <div className="farmer-tool-icon">🏛️</div>
+                  <span className="farmer-tool-label">
+                    GOVERNMENT BENEFITS
+                  </span>
+                  <h3>Cotton Farmer Schemes</h3>
+                  <p>
+                    Explore government schemes and check eligibility,
+                    benefits and application requirements.
+                  </p>
+
+                  <div className="farmer-resource-links">
+                    <a
+                      href="https://www.myscheme.gov.in/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Find eligible schemes ↗
+                    </a>
+
+                    <a
+                      href="https://cotcorp.org.in/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Cotton Corporation of India ↗
+                    </a>
+
+                    <a
+                      href="https://pmkisan.gov.in/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      PM-KISAN ↗
+                    </a>
+                  </div>
+
+                  <small className="farmer-tool-note">
+                    Check official websites for current eligibility
+                    and deadlines.
+                  </small>
+                </article>
+
+                {/* COTTON MARKET PRICES */}
+                <article className="card farmer-tool-card market-tool">
+                  <div className="farmer-tool-icon">📈</div>
+                  <span className="farmer-tool-label">
+                    COTTON MARKET
+                  </span>
+                  <h3>Nearby Mandi Prices</h3>
+                  <p>
+                    Find cotton prices for your district and nearby
+                    agricultural markets.
+                  </p>
+
+                  <div className="market-location">
+                    <span>📍 Your farm location</span>
+                    <strong>
+                      {farms[0]?.locationLabel ||
+                        'Add your farm location'}
+                    </strong>
+                  </div>
+
+                  <div className="market-data-status">
+                    {marketLoading ? (
+                      <p>Loading cotton market prices...</p>
+                    ) : marketError ? (
+                      <div>
+                        <strong>Market prices unavailable</strong>
+                        <p>{marketError}</p>
+
+                        <button
+                          type="button"
+                          className="farmer-tool-button"
+                          onClick={async () => {
+                            try {
+                              setMarketLoading(true);
+                              setMarketError('');
+
+                              const result = await mandiPricesApi.list({
+                                state: 'Maharashtra',
+                                commodity: 'Cotton',
+                                limit: 5,
+                              });
+
+                              setMarketPrices(result.records || []);
+                            } catch (err) {
+                              setMarketError(
+                                err.response?.data?.message ||
+                                  err.message ||
+                                  'Unable to load market prices.'
+                              );
+                            } finally {
+                              setMarketLoading(false);
+                            }
+                          }}
+                        >
+                          Retry
+                        </button>
+                      </div>
+                    ) : marketPrices.length === 0 ? (
+                      <div>
+                        <strong>No market records found</strong>
+                        <p>
+                          Try searching for more markets and dates.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="market-price-list">
+                        {marketPrices.map((item, index) => (
+                          <div
+                            className="market-price-item"
+                            key={`${item.market || 'market'}-${item.arrivalDate || 'date'}-${index}`}
+                          >
+                            <div>
+                              <strong>
+                                {item.market || 'Market unavailable'}
+                              </strong>
+
+                              <p>
+                                {[item.district, item.state]
+                                  .filter(Boolean)
+                                  .join(', ')}
+                              </p>
+
+                              <small>
+                                Arrival date:{' '}
+                                {item.arrivalDate || 'Not provided'}
+                              </small>
+                            </div>
+
+                            <div>
+                              <strong>
+                                {item.modalPrice !== null &&
+                                item.modalPrice !== undefined &&
+                                item.modalPrice !== ''
+                                  ? `₹${Number(
+                                      item.modalPrice
+                                    ).toLocaleString('en-IN')}`
+                                  : '—'}
+                              </strong>
+
+                              <small>Modal price / quintal</small>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <Link
+                    to="/mandi-prices"
+                    className="farmer-tool-button"
+                  >
+                    View all mandi prices →
+                  </Link>
+
+                  <a
+                    className="farmer-tool-button"
+                    href="https://agmarknet.gov.in/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Check AGMARKNET ↗
+                  </a>
+                </article>
+              </div>
+            </section>
+
+            {/* START DETECTION BANNER */}
             {!latest && (
               <section className="farmer-detect-banner">
                 <div>
@@ -602,6 +648,7 @@ useEffect(() => {
                     and view the results.
                   </p>
                 </div>
+
                 <Link to="/detect" className="btn btn-lg">
                   Start Detection →
                 </Link>
@@ -610,8 +657,6 @@ useEffect(() => {
           </>
         )}
       </div>
-
-      
     </div>
   );
 }
